@@ -1,56 +1,23 @@
 require("colors");
 
 const { testServerId } = require("../../config.json");
-const commandComparing = require("../../utils/commandComparing");
 const getApplicationCommands = require("../../utils/getApplicationCommands");
 const getLocalCommands = require("../../utils/getLocalCommands");
 
 module.exports = async (client) => {
   try {
     const localCommands = getLocalCommands();
-    const applicationCommands = await getApplicationCommands(client);
 
-    for (const localCommand of localCommands) {
-      const { data, deleted } = localCommand;
-      const {
-        name: commandName,
-        description: commandDescription,
-        options: commandOptions,
-      } = data;
+    // 1) Bulldozer GUILD: set exactement les locales sur le serveur de test
+    const guildCommands = await getApplicationCommands(client, testServerId);
+    await guildCommands.set(localCommands.map(c => c.data));
+    console.log(`[COMMAND] Guild commands synced (test server): ${localCommands.length}`.green);
 
-      const existingCommand = await applicationCommands.cache.find(
-        (cmd) => cmd.name === commandName
-      );
+    // 2) Bulldozer GLOBAL: vider totalement (évite les doublons visibles côté client)
+    const globalCommands = await getApplicationCommands(client); // sans guildId => global
+    await globalCommands.set([]); // purge complète
+    console.log(`[COMMAND] Global commands purged`.underline.red);
 
-      if (deleted) {
-        if (existingCommand) {
-          await applicationCommands.delete(existingCommand.id);
-          console.log(
-            `[COMMAND] ${commandName} has been deleted`.underline.red
-          );
-        } else {
-          console.log(
-            `[COMMAND] ${commandName} has been skipped`.underline.yellow
-          );
-        }
-      } else if (existingCommand) {
-        if (commandComparing(existingCommand, localCommand)) {
-          await applicationCommands.edit(existingCommand.id, {
-            name: commandName,
-            description: commandDescription,
-            options: commandOptions,
-          });
-          console.log(`[COMMAND] ${commandName} has been edited`.bgGreen);
-        }
-      } else {
-        await applicationCommands.create({
-          name: commandName,
-          description: commandDescription,
-          options: commandOptions,
-        });
-        console.log(`[COMMAND] ${commandName} has been registered`.green);
-      }
-    }
   } catch (error) {
     console.log(`[ERROR] COMMAND REGISTERY: \n ${error}`.red);
   }

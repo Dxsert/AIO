@@ -1,17 +1,19 @@
 {
     "embedColorSuccess": "#00D26A",
-    "embedColorWarning": "FFCC4D",
-    "embedColorError": "FB2F61",
+    "embedColorWarning": "#FFCC4D",
+    "embedColorError": "#FB2F61",
   
-    "embedErrorMessage": "An error occurred!",
+    "embedErrorMessage": "Oops... something went wrong.",
   
-    "commandDevOnly": "This command can only be executed by developers.",
-    "commandTestMode": "This is in development and cannot be executed in this server.",
-    "commandPremiumOnly": "This command can only be executed by premium users.",
+    "commandDevOnly": "Only developers are allowed to run this command.",
+    "commandTestMode": "This feature is in development — execution is disabled on this server.",
+    "commandPremiumOnly": "Insufficient permissions. You are not allowed to run this command.",
   
-    "userNoPermissions": "You do not have enough permissions to execute this command.",
-    "botNoPermissions": "I do not have enough permissions to execute this command.",
+    "userNoPermissions": "Insufficient permissions. You are not allowed to run this command.",
+    "botNoPermissions": "I don't even have the permission to do this... sad bot life 😢",
 
-    "hasHigherRolePosition" : "This person has a higher role than you have or the same role as you have.",
-    "unableToInteractWithYourself" : "You cannot do that to yourself."
+    "hasHigherRolePosition" : "You can't do that because this person has a role as high as, or higher than, yours.",
+    "unableToInteractWithYourself" : "You cannot interact with yourself.",
+
+    "cannotUseButton": "Only the author of the command can use these buttons."
   }

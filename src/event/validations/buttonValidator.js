@@ -10,9 +10,7 @@ module.exports = async (client, interaction) => {
   const buttons = getButtons();
 
   try {
-    const buttonObject = getLocalCommands.find(
-      (cmd) => cmd.data.name === interaction.commandName
-    );
+    const buttonObject = buttons.find((btn) => btn.customId === interaction.customId);
     if (!buttonObject) return;
 
     if (buttonObject.devOnly) {
@@ -36,8 +34,8 @@ module.exports = async (client, interaction) => {
     }
 
     if (buttonObject.userPermissions?.length) {
-      for (const permission of buttonObject.userPermissions) {
-        if (interaction.member.permission.has(permission)) {
+      for (const permissions of buttonObject.userPermissions) {
+        if (interaction.member.permissions.has(permissions)) {
           continue;
         }
         const rEmbed = new EmbedBuilder()
@@ -49,9 +47,9 @@ module.exports = async (client, interaction) => {
     }
 
     if (buttonObject.botPermissions?.length) {
-      for (const permission of buttonObject.botPermissions) {
+      for (const permissions of buttonObject.botPermissions) {
         const bot = interaction.guild.members.me;
-        if (bot.permission.has(permission)) {
+        if (bot.permissions.has(permissions)) {
           continue;
         }
         const rEmbed = new EmbedBuilder()

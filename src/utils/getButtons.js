@@ -1,19 +1,16 @@
 const path = require("path");
 const getAllFiles = require("./getAllFiles");
 
-module.exports = (exceptions = []) => {
+module.exports = (expections = []) => {
   let buttons = [];
-  const buttonFiles = getAllFiles(
-    path.join(__dirname, "..", "contextmenus"),
-    true
-  );
+  const buttonFiles = getAllFiles(path.join(__dirname, "..", "buttons"));
 
   for (const buttonFile of buttonFiles) {
     const buttonObject = require(buttonFile);
 
-    if (exceptions.includes(buttonObject.name)) continue;
+    if (expections.includes(buttonObject.name)) continue;
 
-    buttons.push(menuObject);
+    buttons.push(buttonObject);
   }
 
   return buttons;

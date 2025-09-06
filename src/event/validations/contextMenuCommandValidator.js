@@ -6,16 +6,16 @@ const mConfig = require("../../messageConfig.json");
 const getLocalContextMenus = require("../../utils/getLocalContextMenus");
 
 module.exports = async (client, interaction) => {
-  if (!interaction.isButton()) return;
-  const buttons = getButtons();
+  if (!interaction.isContextMenuCommand()) return;
+  const localContextMenus = getLocalContextMenus();
 
   try {
-    const buttonObject = getLocalCommands.find(
+    const menuObject = localContextMenus.find(
       (cmd) => cmd.data.name === interaction.commandName
     );
-    if (!buttonObject) return;
+    if (!menuObject) return;
 
-    if (buttonObject.devOnly) {
+    if (menuObject.devOnly) {
       if (!developersId.includes(interaction.member.id)) {
         const rEmbed = new EmbedBuilder()
           .setColor(`${mConfig.embedColorError}`)
@@ -25,7 +25,7 @@ module.exports = async (client, interaction) => {
       }
     }
 
-    if (buttonObject.testMode) {
+    if (menuObject.testMode) {
       if (interaction.guild.id !== testServerId) {
         const rEmbed = new EmbedBuilder()
           .setColor(`${mConfig.embedColorError}`)
@@ -35,9 +35,9 @@ module.exports = async (client, interaction) => {
       }
     }
 
-    if (buttonObject.userPermissions?.length) {
-      for (const permission of buttonObject.userPermissions) {
-        if (interaction.member.permission.has(permission)) {
+    if (menuObject.userPermissions?.length) {
+      for (const permissions of menuObject.userPermissions) {
+        if (interaction.member.permissions.has(permissions)) {
           continue;
         }
         const rEmbed = new EmbedBuilder()
@@ -48,10 +48,10 @@ module.exports = async (client, interaction) => {
       }
     }
 
-    if (buttonObject.botPermissions?.length) {
-      for (const permission of buttonObject.botPermissions) {
+    if (menuObject.botPermissions?.length) {
+      for (const permissions of menuObject.botPermissions) {
         const bot = interaction.guild.members.me;
-        if (bot.permission.has(permission)) {
+        if (bot.permissions.has(permissions)) {
           continue;
         }
         const rEmbed = new EmbedBuilder()
@@ -72,7 +72,7 @@ module.exports = async (client, interaction) => {
       }
     }
 
-    await buttonObject.run(client, interaction);
+    await menuObject.run(client, interaction);
   } catch (err) {
     console.log(`An error occurred! ${err}`.red);
   }

@@ -7,7 +7,7 @@ const getLocalContextMenus = require("../../utils/getLocalContextMenus");
 module.exports = async (client) => {
   try {
     const localContextMenus = getLocalContextMenus();
-    const applicationContextMenus = await getApplicationContextMenus(client);
+    const applicationContextMenus = await getApplicationContextMenus(client, testServerId);
 
     for (const localContextMenu of localContextMenus) {
       const { data } = localContextMenu;
@@ -20,7 +20,7 @@ module.exports = async (client) => {
 
       if (existingContextMenu) {
         if (localContextMenu.deleted) {
-          await applicationCommands.delete(existingContextMenu.id);
+          await applicationContextMenus.delete(existingContextMenu.id);
           console.log(
             `[CONTEXT MENU] ${contextMenuName} has been deleted`.underline.red
           );
